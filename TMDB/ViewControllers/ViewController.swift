@@ -11,6 +11,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     var genreList = [Genre]()
+    var xOffsets: [IndexPath: CGFloat] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,7 @@ class ViewController: UIViewController {
         getGenreList()
     }
     
-    
+    //fetching genre list from api
     func getGenreList(){
         APIService.API.getGenreList{
             [weak self] jsonPayload in
@@ -50,7 +51,18 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
         return cell
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 270.0
+    }
+    
+    
+    //these 2 methods are used to keep track of the scroll position of the collection view because dequeue reusable method kept scrolling multiple rows at once
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        xOffsets[indexPath] = (cell as? TableViewCell)?.collView.contentOffset.x
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        (cell as? TableViewCell)?.collView.contentOffset.x = xOffsets[indexPath] ?? 0
     }
 }

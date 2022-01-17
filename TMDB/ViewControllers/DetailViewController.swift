@@ -34,6 +34,7 @@ class DetailViewController: UIViewController {
             return
         }
         
+        //again fetching movie poster image. This could be improved with setiing the image from the cell when pushing the vc
         APIService.API.getMoviePoster(posterPath){
             [weak self] posterData in
             DispatchQueue.main.async {
