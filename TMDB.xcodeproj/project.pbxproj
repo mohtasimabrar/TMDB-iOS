@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C80B20927901CAC00AEE093 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C80B20827901CAC00AEE093 /* APIService.swift */; };
 		1C9707D72786DE72001E89F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9707D62786DE72001E89F4 /* AppDelegate.swift */; };
 		1C9707D92786DE72001E89F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9707D82786DE72001E89F4 /* SceneDelegate.swift */; };
 		1C9707DB2786DE72001E89F4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9707DA2786DE72001E89F4 /* ViewController.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C80B20827901CAC00AEE093 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		1C9707D32786DE72001E89F4 /* TMDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TMDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C9707D62786DE72001E89F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C9707D82786DE72001E89F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +55,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C80B205278FFA4D00AEE093 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				1C80B20827901CAC00AEE093 /* APIService.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		1C80B20A27901FBF00AEE093 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				1C9707DA2786DE72001E89F4 /* ViewController.swift */,
+				1C9707EA2786F4BC001E89F4 /* DetailViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		1C80B20B27901FE900AEE093 /* CellViews */ = {
+			isa = PBXGroup;
+			children = (
+				1CAE3FA9278C406C00CDEC69 /* CollectionViewCell.swift */,
+				1CAE3FA7278C2D8D00CDEC69 /* TableViewCell.swift */,
+			);
+			path = CellViews;
+			sourceTree = "<group>";
+		};
 		1C9707CA2786DE72001E89F4 = {
 			isa = PBXGroup;
 			children = (
@@ -72,13 +100,12 @@
 		1C9707D52786DE72001E89F4 /* TMDB */ = {
 			isa = PBXGroup;
 			children = (
+				1C80B20B27901FE900AEE093 /* CellViews */,
+				1C80B20A27901FBF00AEE093 /* ViewControllers */,
+				1C80B205278FFA4D00AEE093 /* Networking */,
 				1C9CFDDE278D335700A92986 /* Models */,
 				1C9707D62786DE72001E89F4 /* AppDelegate.swift */,
 				1C9707D82786DE72001E89F4 /* SceneDelegate.swift */,
-				1C9707DA2786DE72001E89F4 /* ViewController.swift */,
-				1CAE3FA7278C2D8D00CDEC69 /* TableViewCell.swift */,
-				1CAE3FA9278C406C00CDEC69 /* CollectionViewCell.swift */,
-				1C9707EA2786F4BC001E89F4 /* DetailViewController.swift */,
 				1C9CFDDC278D332A00A92986 /* Constants.swift */,
 				1C9707DC2786DE72001E89F4 /* Main.storyboard */,
 				1C9707DF2786DE75001E89F4 /* Assets.xcassets */,
@@ -178,6 +205,7 @@
 				1C9CFDE4278D3D2800A92986 /* Movie.swift in Sources */,
 				1C9CFDDD278D332A00A92986 /* Constants.swift in Sources */,
 				1C9707D92786DE72001E89F4 /* SceneDelegate.swift in Sources */,
+				1C80B20927901CAC00AEE093 /* APIService.swift in Sources */,
 				1C9707EB2786F4BC001E89F4 /* DetailViewController.swift in Sources */,
 				1C9CFDE0278D337F00A92986 /* Genre.swift in Sources */,
 				1C9CFDE2278D34A200A92986 /* GenreResponse.swift in Sources */,

@@ -17,37 +17,20 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         title = "The Movie Database"
-        getGenreList(from: Constants.genreURL)
+        getGenreList()
     }
     
     
-    func getGenreList(from url: String){
-        
-        //URLSession.shared.dataTask(with: URLRequest(url: URL(string: url)!))
-        let task = URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: {
-            (data, response, error) in
-            
-            var result: GenreResponse?
-            do {
-                result = try JSONDecoder().decode(GenreResponse.self, from: data!)
-                guard let json = result else {
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    self.genreList = json.genres
-                    self.tableView.reloadData()
-                }
-            } catch {
-                print(error)
+    func getGenreList(){
+        APIService.API.getGenreList{
+            [weak self] jsonPayload in
+            DispatchQueue.main.async {
+                self?.genreList = jsonPayload.genres
+                self?.tableView.reloadData()
             }
-            
-        })
-        
-        task.resume()
+        }
     }
-
-
+    
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {

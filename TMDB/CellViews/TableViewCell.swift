@@ -22,11 +22,8 @@ class TableViewCell: UITableViewCell {
         
         collView.delegate = self
         collView.dataSource = self
-        guard let genreId = genreId else {
-            return
-        }
-
-        getMovieData(from: Constants.getMovieCollectionURL(byGenre: genreId ))
+        
+        getMovieData()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -35,30 +32,17 @@ class TableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func getMovieData(from url: String){
-        
-        //URLSession.shared.dataTask(with: URLRequest(url: URL(string: url)!))
-        let task = URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: {
-            (data, response, error) in
-            
-            var result: MovieCollectionResponse?
-            do {
-                result = try JSONDecoder().decode(MovieCollectionResponse.self, from: data!)
-                guard let json = result else {
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    self.movieList = json.results
-                    self.collView.reloadData()
-                }
-            } catch {
-                print(error)
+    func getMovieData(){
+        guard let genreId = genreId else {
+            return
+        }
+        APIService.API.getMoviesByGenre(genreId){
+            [weak self] jsonPayload in
+            DispatchQueue.main.async {
+                self?.movieList = jsonPayload.results
+                self?.collView.reloadData()
             }
-            
-        })
-        
-        task.resume()
+        }
     }
     
 }
@@ -72,19 +56,16 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
         let cell = collView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath) as! CollectionViewCell
         let movie = movieList[indexPath.row]
         
-        guard let uri = movie.poster_path else {
+        guard let posterPath = movie.poster_path else {
             return cell
         }
-        URLSession.shared.dataTask(with: URLRequest(url: URL(string: Constants.posterBaseURL + uri)!)) {
-            (data, req, error) in
-            
-            let posterView = data
-                
+        
+        APIService.API.getMoviePoster(posterPath){
+            posterData in
             DispatchQueue.main.async {
-                cell.imgView.image = UIImage(data: posterView!)
+                cell.imgView.image = UIImage(data: posterData)
             }
-
-        }.resume()
+        }
         
         cell.layer.cornerRadius = 5.0
         cell.layer.borderWidth = 0.0
