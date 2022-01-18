@@ -8,5 +8,24 @@
 import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
+    
+    func cellConfiguration(posterPath: String) {
+        
+        //fetching poster image
+        APIService.API.getMoviePoster(posterPath){
+            [weak self] posterData in
+            DispatchQueue.main.async {
+                self?.imageView.image = UIImage(data: posterData)
+            }
+        }
+        
+        layer.cornerRadius = 5.0
+        layer.borderWidth = 0.0
+        layer.shadowColor = UIColor.white.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowRadius = 5.0
+        layer.shadowOpacity = 0.5
+        layer.masksToBounds = true
+    }
 }

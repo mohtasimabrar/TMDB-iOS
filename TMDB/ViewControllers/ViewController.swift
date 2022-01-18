@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
         title = "The Movie Database"
         getGenreList()
@@ -40,15 +39,12 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
-        cell.selectionStyle = .none
-        cell.backgroundColor = UIColor.clear
-        cell.titleText.text = genreList[indexPath.row].name
-        cell.genreId = genreList[indexPath.row].id
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            return cell
+        }
+        cell.cellConfiguration(genreName: genreList[indexPath.row].name, genreID: genreList[indexPath.row].id)
         cell.parent = self
-        
-        cell.awakeFromNib()
-    
         return cell
     }
     
@@ -59,10 +55,10 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     //these 2 methods are used to keep track of the scroll position of the collection view because dequeue reusable method kept scrolling multiple rows at once
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        xOffsets[indexPath] = (cell as? TableViewCell)?.collView.contentOffset.x
+        xOffsets[indexPath] = (cell as? TableViewCell)?.collectionView.contentOffset.x
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        (cell as? TableViewCell)?.collView.contentOffset.x = xOffsets[indexPath] ?? 0
+        (cell as? TableViewCell)?.collectionView.contentOffset.x = xOffsets[indexPath] ?? 0
     }
 }

@@ -69,7 +69,7 @@
                                                             </constraints>
                                                             <size key="customSize" width="120" height="165"/>
                                                             <connections>
-                                                                <outlet property="imgView" destination="HB7-bG-Uq7" id="ssX-Oo-48w"/>
+                                                                <outlet property="imageView" destination="HB7-bG-Uq7" id="Noc-HU-wa9"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
@@ -91,8 +91,8 @@
                                         </constraints>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
-                                            <outlet property="collView" destination="u8F-nX-d93" id="5Ho-IL-7cb"/>
-                                            <outlet property="titleText" destination="RZx-0c-wI0" id="lms-2r-mjJ"/>
+                                            <outlet property="collectionView" destination="u8F-nX-d93" id="TA2-u3-OQz"/>
+                                            <outlet property="titleTextLabel" destination="RZx-0c-wI0" id="YZs-NS-rHj"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -262,14 +262,14 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="bg" destination="p9H-Uv-oz4" id="IGP-Kn-EQk"/>
-                        <outlet property="des" destination="Psm-2t-YtU" id="5zw-HA-Fk0"/>
-                        <outlet property="name" destination="pLE-CS-kfX" id="dLF-gV-72k"/>
-                        <outlet property="popularity" destination="SxJ-h1-ylB" id="u2F-Dg-Xmw"/>
-                        <outlet property="poster" destination="yje-6x-rRf" id="ECj-gZ-Oth"/>
-                        <outlet property="rating" destination="VrN-XM-pZ6" id="C8I-GT-M0f"/>
-                        <outlet property="relDate" destination="GFa-Mp-1fs" id="fvr-al-SPp"/>
-                        <outlet property="votes" destination="K40-jP-eVM" id="1qj-pj-2th"/>
+                        <outlet property="backGroundImageView" destination="p9H-Uv-oz4" id="fgp-rm-h1E"/>
+                        <outlet property="descriptionLabel" destination="Psm-2t-YtU" id="AnB-hT-1ed"/>
+                        <outlet property="nameLabel" destination="pLE-CS-kfX" id="16H-M2-3g1"/>
+                        <outlet property="popularityLabel" destination="SxJ-h1-ylB" id="xc8-5I-Ovu"/>
+                        <outlet property="posterImageView" destination="yje-6x-rRf" id="dbU-rM-vct"/>
+                        <outlet property="ratingLabel" destination="VrN-XM-pZ6" id="8g8-iq-Kbf"/>
+                        <outlet property="releaseDateLabel" destination="GFa-Mp-1fs" id="WhU-3i-x3G"/>
+                        <outlet property="votesLabel" destination="K40-jP-eVM" id="1gT-cQ-9sT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vQs-wN-9oH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

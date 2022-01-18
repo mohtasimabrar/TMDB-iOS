@@ -62,8 +62,9 @@ class APIService {
             (data, response, error) in
             
             var result: MovieCollectionResponse?
+            guard let data = data else { return }
             do {
-                result = try JSONDecoder().decode(MovieCollectionResponse.self, from: data!)
+                result = try JSONDecoder().decode(MovieCollectionResponse.self, from: data)
                 guard let json = result else {
                     return
                 }

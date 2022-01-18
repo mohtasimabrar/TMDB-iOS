@@ -9,8 +9,8 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     
-    @IBOutlet weak var titleText: UILabel!
-    @IBOutlet weak var collView: UICollectionView!
+    @IBOutlet weak var titleTextLabel: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
     var genreId: Int?
     var movieList = [Movie]()
     var parent: UIViewController?
@@ -25,8 +25,8 @@ class TableViewCell: UITableViewCell {
         // Initialization code
         
         //delegating
-        collView.delegate = self
-        collView.dataSource = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
         
         getMovieData()
     }
@@ -47,9 +47,18 @@ class TableViewCell: UITableViewCell {
             DispatchQueue.main.async {
                 self?.totalPage = jsonPayload.total_pages
                 self?.movieList = jsonPayload.results
-                self?.collView.reloadData()
+                self?.collectionView.reloadData()
             }
         }
+    }
+    
+    func cellConfiguration(genreName: String, genreID: Int){
+        selectionStyle = .none
+        backgroundColor = UIColor.clear
+        titleTextLabel.text = genreName
+        genreId = genreID
+        
+        awakeFromNib()
     }
     
 }
@@ -66,28 +75,16 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
             self.fetching = false
         }
         
-        let cell = collView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath) as! CollectionViewCell
-        let movie = movieList[indexPath.row]
-        
-        guard let posterPath = movie.poster_path else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath) as? CollectionViewCell else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath)
             return cell
         }
         
-        //fetching poster image
-        APIService.API.getMoviePoster(posterPath){
-            posterData in
-            DispatchQueue.main.async {
-                cell.imgView.image = UIImage(data: posterData)
-            }
+        guard let posterPath = movieList[indexPath.row].poster_path else {
+            return cell
         }
         
-        cell.layer.cornerRadius = 5.0
-        cell.layer.borderWidth = 0.0
-        cell.layer.shadowColor = UIColor.white.cgColor
-        cell.layer.shadowOffset = CGSize(width: 0, height: 0)
-        cell.layer.shadowRadius = 5.0
-        cell.layer.shadowOpacity = 0.5
-        cell.layer.masksToBounds = true
+        cell.cellConfiguration(posterPath: posterPath)
         
         return cell
     }
@@ -98,7 +95,7 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
         
         //pushing detail view when selected
         if let vc = storyboard.instantiateViewController(withIdentifier: "details") as? DetailViewController {
-            vc.movie.append(movieList[indexPath.row])
+            vc.movie = movieList[indexPath.row]
             parent?.navigationController?.pushViewController(vc, animated: true)
         }
         
@@ -107,8 +104,6 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetX = scrollView.contentOffset.x
         let contentWidth = scrollView.contentSize.width
-        
-        //print("lhs: \(offsetX) > rhs: \(contentWidth - scrollView.frame.width)")
         
         //we only call the api when we are near the end of the scroll view
         if offsetX > contentWidth - scrollView.frame.width - 100{
@@ -132,7 +127,7 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
                 [weak self] jsonPayload in
                 DispatchQueue.main.async {
                     self?.movieList.append(contentsOf: jsonPayload.results)
-                    self?.collView.reloadData()
+                    self?.collectionView.reloadData()
                 }
             }
             

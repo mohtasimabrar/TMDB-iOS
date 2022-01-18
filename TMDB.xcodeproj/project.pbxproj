@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1C80B20927901CAC00AEE093 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C80B20827901CAC00AEE093 /* APIService.swift */; };
+		1C960BC327969F630012E697 /* LosslessStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C960BC227969F630012E697 /* LosslessStringConvertible.swift */; };
 		1C9707D72786DE72001E89F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9707D62786DE72001E89F4 /* AppDelegate.swift */; };
 		1C9707D92786DE72001E89F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9707D82786DE72001E89F4 /* SceneDelegate.swift */; };
 		1C9707DB2786DE72001E89F4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9707DA2786DE72001E89F4 /* ViewController.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		1C80B20827901CAC00AEE093 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		1C960BC227969F630012E697 /* LosslessStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LosslessStringConvertible.swift; sourceTree = "<group>"; };
 		1C9707D32786DE72001E89F4 /* TMDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TMDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C9707D62786DE72001E89F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1C9707D82786DE72001E89F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +83,14 @@
 			path = CellViews;
 			sourceTree = "<group>";
 		};
+		1C960BC127969F4D0012E697 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1C960BC227969F630012E697 /* LosslessStringConvertible.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		1C9707CA2786DE72001E89F4 = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +110,7 @@
 		1C9707D52786DE72001E89F4 /* TMDB */ = {
 			isa = PBXGroup;
 			children = (
+				1C960BC127969F4D0012E697 /* Extensions */,
 				1C80B20B27901FE900AEE093 /* CellViews */,
 				1C80B20A27901FBF00AEE093 /* ViewControllers */,
 				1C80B205278FFA4D00AEE093 /* Networking */,
@@ -207,6 +218,7 @@
 				1C9707D92786DE72001E89F4 /* SceneDelegate.swift in Sources */,
 				1C80B20927901CAC00AEE093 /* APIService.swift in Sources */,
 				1C9707EB2786F4BC001E89F4 /* DetailViewController.swift in Sources */,
+				1C960BC327969F630012E697 /* LosslessStringConvertible.swift in Sources */,
 				1C9CFDE0278D337F00A92986 /* Genre.swift in Sources */,
 				1C9CFDE2278D34A200A92986 /* GenreResponse.swift in Sources */,
 			);
