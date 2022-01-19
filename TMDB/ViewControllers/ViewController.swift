@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         title = "The Movie Database"
+        tableView.prefetchDataSource = self
         getGenreList()
     }
     
@@ -24,9 +25,14 @@ class ViewController: UIViewController {
     func getGenreList(){
         APIService.API.getGenreList{
             [weak self] jsonPayload in
+            
+            guard let weakSelf = self else {
+                return
+            }
+            
             DispatchQueue.main.async {
-                self?.genreList = jsonPayload.genres
-                self?.tableView.reloadData()
+                weakSelf.genreList = jsonPayload.genres
+                weakSelf.tableView.reloadData()
             }
         }
     }
@@ -40,8 +46,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            return cell
+            return UITableViewCell()
         }
         cell.cellConfiguration(genreName: genreList[indexPath.row].name, genreID: genreList[indexPath.row].id)
         cell.parent = self
@@ -61,4 +66,18 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         (cell as? TableViewCell)?.collectionView.contentOffset.x = xOffsets[indexPath] ?? 0
     }
+}
+
+extension ViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            print("Prefetching Table Data: \(indexPath.row)")
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell else {
+                return
+            }
+            cell.cellConfiguration(genreName: genreList[indexPath.row].name, genreID: genreList[indexPath.row].id)
+            cell.parent = self
+        }
+    }
+    
 }

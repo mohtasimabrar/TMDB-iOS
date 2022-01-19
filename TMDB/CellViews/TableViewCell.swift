@@ -27,14 +27,13 @@ class TableViewCell: UITableViewCell {
         //delegating
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.prefetchDataSource = self
         
         getMovieData()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
     //fetching movie collection and the data from 1st page of the api
@@ -42,12 +41,18 @@ class TableViewCell: UITableViewCell {
         guard let genreId = genreId else {
             return
         }
+        
         APIService.API.getMoviesByGenre(genreId){
             [weak self] jsonPayload in
+            
+            guard let weakSelf = self else {
+                return
+            }
+            
             DispatchQueue.main.async {
-                self?.totalPage = jsonPayload.total_pages
-                self?.movieList = jsonPayload.results
-                self?.collectionView.reloadData()
+                weakSelf.totalPage = jsonPayload.total_pages
+                weakSelf.movieList = jsonPayload.results
+                weakSelf.collectionView.reloadData()
             }
         }
     }
@@ -69,19 +74,12 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        //setting fetching to false 5 index before the end so that the scrollviewdidscroll is ready for fetching
-        if (indexPath.row == movieList.count-5){
-            self.fetching = false
-        }
-        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath) as? CollectionViewCell else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath)
-            return cell
+            return UICollectionViewCell()
         }
         
         guard let posterPath = movieList[indexPath.row].poster_path else {
-            return cell
+            return UICollectionViewCell()
         }
         
         cell.cellConfiguration(posterPath: posterPath)
@@ -90,7 +88,6 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         //pushing detail view when selected
@@ -100,21 +97,33 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
         }
         
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetX = scrollView.contentOffset.x
-        let contentWidth = scrollView.contentSize.width
-        
-        //we only call the api when we are near the end of the scroll view
-        if offsetX > contentWidth - scrollView.frame.width - 100{
-            //checking if we are already fetching any data or not
-            if !fetching {
-                self.fetching = true
-                print("api calling with page \(pageCount) | OffsetX: \(offsetX)")
-                self.fetchData()
+}
+
+extension TableViewCell: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            print("Prefetching \(titleTextLabel.text!) Cell: \(indexPath.row)")
+            if movieList.count-10 == indexPath.row {
+                if !fetching {
+                    self.fetching = true
+                    self.fetchData()
+                }
+                self.fetching = false
             }
+            
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "item", for: indexPath) as? CollectionViewCell else {
+                return
+            }
+            
+            guard let posterPath = movieList[indexPath.row].poster_path else {
+                return
+            }
+            
+            cell.cellConfiguration(posterPath: posterPath)
+            
         }
     }
+    
     
     func fetchData() {
         if pageCount <= totalPage {
@@ -122,17 +131,27 @@ extension TableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
                 return
             }
             
+            print("API Called")
             //calling api with pagination
             APIService.API.getMoviesByPage(genreId, pageCount){
                 [weak self] jsonPayload in
+                
+                guard let weakSelf = self else {
+                    return
+                }
+                
                 DispatchQueue.main.async {
-                    self?.movieList.append(contentsOf: jsonPayload.results)
-                    self?.collectionView.reloadData()
+                    weakSelf.movieList.append(contentsOf: jsonPayload.results)
+                    
+                    //changed here to only insert items rather than reloading the whole collectionView
+                    let count = (weakSelf.pageCount-1)*20
+                    let indexPaths = Array(count..<count+20).map { IndexPath(item: $0, section: 0) }
+                    weakSelf.collectionView.insertItems(at: indexPaths)
+                    
+                    weakSelf.pageCount += 1
                 }
             }
-            
-            self.pageCount += 1
         }
     }
-    
+
 }

@@ -15,8 +15,13 @@ class CollectionViewCell: UICollectionViewCell {
         //fetching poster image
         APIService.API.getMoviePoster(posterPath){
             [weak self] posterData in
+            
+            guard let weakSelf = self else {
+                return
+            }
+            
             DispatchQueue.main.async {
-                self?.imageView.image = UIImage(data: posterData)
+                weakSelf.imageView.image = UIImage(data: posterData)
             }
         }
         
