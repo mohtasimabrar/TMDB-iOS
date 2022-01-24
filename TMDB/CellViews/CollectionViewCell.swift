@@ -5,6 +5,7 @@
 //  Created by BS236 on 10/1/22.
 //
 
+import SDWebImage
 import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
@@ -12,18 +13,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     func cellConfiguration(posterPath: String) {
         
-        //fetching poster image
-        APIService.API.getMoviePoster(posterPath){
-            [weak self] posterData in
-            
-            guard let weakSelf = self else {
-                return
-            }
-            
-            DispatchQueue.main.async {
-                weakSelf.imageView.image = UIImage(data: posterData)
-            }
-        }
+        imageView.sd_setImage(with: URL(string: Constants.posterBaseURL+posterPath), placeholderImage: UIImage(systemName: "photo"), options: .continueInBackground, completed: nil)
         
         layer.cornerRadius = 5.0
         layer.borderWidth = 0.0

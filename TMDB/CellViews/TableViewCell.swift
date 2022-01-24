@@ -29,7 +29,6 @@ class TableViewCell: UITableViewCell {
         collectionView.dataSource = self
         collectionView.prefetchDataSource = self
         
-        getMovieData()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -57,11 +56,17 @@ class TableViewCell: UITableViewCell {
         }
     }
     
-    func cellConfiguration(genreName: String, genreID: Int){
+    func cellConfiguration(genre: Genre, movies: MovieCollectionResponse){
         selectionStyle = .none
         backgroundColor = UIColor.clear
-        titleTextLabel.text = genreName
-        genreId = genreID
+        titleTextLabel.text = genre.name
+        genreId = genre.id
+        movieList = movies.results
+        totalPage = movies.total_pages
+        if (movies.page > 1){
+            pageCount = movies.page
+        }
+        collectionView.reloadData()
         
         awakeFromNib()
     }
@@ -107,6 +112,7 @@ extension TableViewCell: UICollectionViewDataSourcePrefetching {
                 if !fetching {
                     self.fetching = true
                     self.fetchData()
+                    //print("Page Count: \(pageCount)")
                 }
                 self.fetching = false
             }
@@ -143,10 +149,12 @@ extension TableViewCell: UICollectionViewDataSourcePrefetching {
                 DispatchQueue.main.async {
                     weakSelf.movieList.append(contentsOf: jsonPayload.results)
                     
-                    //changed here to only insert items rather than reloading the whole collectionView
-                    let count = (weakSelf.pageCount-1)*20
-                    let indexPaths = Array(count..<count+20).map { IndexPath(item: $0, section: 0) }
-                    weakSelf.collectionView.insertItems(at: indexPaths)
+//                    //changed here to only insert items rather than reloading the whole collectionView
+//                    let count = (weakSelf.pageCount-1)*20
+//                    let indexPaths = Array(count..<count+20).map { IndexPath(item: $0, section: 0) }
+//                    weakSelf.collectionView.insertItems(at: indexPaths)
+                    
+                    weakSelf.collectionView.reloadData()
                     
                     weakSelf.pageCount += 1
                 }

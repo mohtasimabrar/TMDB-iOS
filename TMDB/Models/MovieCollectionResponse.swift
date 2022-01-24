@@ -8,8 +8,8 @@
 import Foundation
 
 struct MovieCollectionResponse: Codable {
-    let page: Int
-    let results: [Movie]
+    var page: Int
+    var results: [Movie]
     let total_pages: Int
     let total_results: Int
 }

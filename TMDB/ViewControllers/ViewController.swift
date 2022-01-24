@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var genreList = [Genre]()
     var xOffsets: [IndexPath: CGFloat] = [:]
+    var movieData: [IndexPath: MovieCollectionResponse] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +49,32 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell else {
             return UITableViewCell()
         }
-        cell.cellConfiguration(genreName: genreList[indexPath.row].name, genreID: genreList[indexPath.row].id)
+        
+        if let movies = movieData[indexPath] {
+            
+            //print("Accessing from movieData")
+            cell.cellConfiguration(genre: genreList[indexPath.row], movies: movies)
+            cell.parent = self
+            return cell
+            
+        }
+        
+        APIService.API.getMoviesByGenre(genreList[indexPath.row].id){
+            [weak self] jsonPayload in
+            
+            guard let weakSelf = self else {
+                return
+            }
+            
+            weakSelf.movieData[indexPath] = jsonPayload
+            DispatchQueue.main.async {
+                cell.cellConfiguration(genre: weakSelf.genreList[indexPath.row], movies: jsonPayload)
+            }
+            
+        }
+        
         cell.parent = self
+        //print("Calling API to get movieData")
         return cell
     }
     
@@ -61,6 +86,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     //these 2 methods are used to keep track of the scroll position of the collection view because dequeue reusable method kept scrolling multiple rows at once
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         xOffsets[indexPath] = (cell as? TableViewCell)?.collectionView.contentOffset.x
+        //print("storing data")
+        movieData[indexPath]?.page = (cell as? TableViewCell)!.pageCount
+        movieData[indexPath]?.results.append(contentsOf: (cell as? TableViewCell)!.movieList)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -75,9 +103,33 @@ extension ViewController: UITableViewDataSourcePrefetching {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell else {
                 return
             }
-            cell.cellConfiguration(genreName: genreList[indexPath.row].name, genreID: genreList[indexPath.row].id)
+            
+            if let movies = movieData[indexPath] {
+                
+                cell.cellConfiguration(genre: genreList[indexPath.row], movies: movies)
+                cell.parent = self
+                return
+                
+            }
+            
+            APIService.API.getMoviesByGenre(genreList[indexPath.row].id){
+                [weak self] jsonPayload in
+                
+                guard let weakSelf = self else {
+                    return
+                }
+                
+                weakSelf.movieData[indexPath] = jsonPayload
+                DispatchQueue.main.async {
+                    cell.cellConfiguration(genre: weakSelf.genreList[indexPath.row], movies: jsonPayload)
+                }
+                
+            }
+            
             cell.parent = self
+            
+            return
         }
     }
-    
+
 }

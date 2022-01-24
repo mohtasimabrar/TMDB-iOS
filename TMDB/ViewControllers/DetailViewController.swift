@@ -5,6 +5,7 @@
 //  Created by BS236 on 6/1/22.
 //
 
+import SDWebImage
 import UIKit
 
 class DetailViewController: UIViewController {
@@ -36,19 +37,9 @@ class DetailViewController: UIViewController {
             return
         }
         
-        //again fetching movie poster image. This could be improved with setiing the image from the cell when pushing the vc
-        APIService.API.getMoviePoster(posterPath){
-            [weak self] posterData in
-            
-            guard let weakSelf = self else {
-                return
-            }
-            
-            DispatchQueue.main.async {
-                weakSelf.backGroundImageView.image = UIImage(data: posterData)
-                weakSelf.posterImageView.image = UIImage(data: posterData)
-            }
-        }
+        posterImageView.sd_setImage(with: URL(string: Constants.posterBaseURL+posterPath), placeholderImage: UIImage(systemName: "photo"), options: .continueInBackground, completed: nil)
+        
+        backGroundImageView.sd_setImage(with: URL(string: Constants.posterBaseURL+posterPath), placeholderImage: UIImage(systemName: "photo"), options: .continueInBackground, completed: nil)
     }
     
     
@@ -74,5 +65,3 @@ class DetailViewController: UIViewController {
         view.insertSubview(blurEffectView, at: 1)
     }
 }
-
-

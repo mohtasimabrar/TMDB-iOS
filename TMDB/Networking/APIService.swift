@@ -78,17 +78,4 @@ class APIService {
         task.resume()
     }
     
-    
-    //fetching poster api
-    public func getMoviePoster(_ posterPath: String, completionHandler: @escaping (Data)->Void) {
-        URLSession.shared.dataTask(with: URLRequest(url: URL(string: Constants.posterBaseURL + posterPath)!)) {
-            (data, req, error) in
-            guard let posterData = data else {
-                print("poster data not found")
-                return
-            }
-            completionHandler(posterData)
-
-        }.resume()
-    }
 }
